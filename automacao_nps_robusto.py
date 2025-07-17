@@ -1,13 +1,11 @@
-
 import pandas as pd
 import unicodedata
 import re
 
 # Carregar a base de NPS
-nps_df = pd.read_excel(r'\Gog\Part I\1. Base de NPS.xlsx')
-
-# Filtrar os detratores (notas de 0 a 6)
-detratores_df = nps_df[nps_df['Rating'] <= 6].copy()
+nps_df = pd.read_excel(
+    r'\Gog\Part I\1. Base de NPS.xlsx'
+)
 
 # Categorias expandidas com palavras-chave
 categorias = {
@@ -48,25 +46,40 @@ def normalizar_texto(texto):
     texto = re.sub(r'[^\w\s]', '', texto)
     return texto
 
-# Função para classificar comentário com base no texto normalizado
-def classificar_problema(texto):
-    texto_normalizado = normalizar_texto(texto)
-    for categoria, palavras in categorias.items():
-        for palavra in palavras:
-            if palavra in texto_normalizado:
-                return categoria
-    return 'Outros'
+# Função para classificar todos os registros
+def classificar_problema(row):
+    nota = row['Rating']
+    texto = row['Body']
 
-# Aplicar classificação
-detratores_df['categoria_problema'] = detratores_df['Body'].apply(classificar_problema)
+    if nota <= 6:
+        texto_normalizado = normalizar_texto(texto)
+        for categoria, palavras in categorias.items():
+            for palavra in palavras:
+                if palavra in texto_normalizado:
+                    return categoria
+        return 'Outros'
+    elif nota <= 8:
+        return 'Neutro (sem problema)'
+    else:
+        return 'Promotor (sem problema)'
 
-# Criar relatório semanal
-relatorio = detratores_df.groupby('categoria_problema').agg(
-    qtd_detratores=('Order ID', 'count')
+# Aplicar classificação em toda a base
+nps_df['categoria_problema'] = nps_df.apply(classificar_problema, axis=1)
+
+# Criar relatório geral
+relatorio = nps_df.groupby('categoria_problema').agg(
+    qtd_respostas=('Order ID', 'count')
 ).reset_index()
 
 # Exportar os arquivos
-detratores_df.to_excel(r'\Gog\project\doc\result\detratores_classificados.xlsx', index=False)
-relatorio.to_excel(r'\Gog\project\doc\result\relatorio_impacto_semanal.xlsx', index=False)
+nps_df.to_excel(
+    r'\Gog\project\doc\result\nps_classificado_todos.xlsx',
+    index=False
+)
 
-print("Relatórios gerados com sucesso!")
+relatorio.to_excel(
+    r'\Gog\project\doc\result\relatorio_geral_nps.xlsx',
+    index=False
+)
+
+print("Classificação de todos os registros concluída com sucesso.")
