@@ -4,7 +4,7 @@ import unicodedata
 import re
 
 # Carregar a base de NPS
-nps_df = pd.read_excel(r'C:\Users\Kosmos Soluções\OneDrive - Kosmos Construtora Ltda\Documentos\ProjectsUser\Gog\Part I\1. Base de NPS.xlsx')
+nps_df = pd.read_excel(r'\Gog\Part I\1. Base de NPS.xlsx')
 
 # Filtrar os detratores (notas de 0 a 6)
 detratores_df = nps_df[nps_df['Rating'] <= 6].copy()
@@ -66,7 +66,7 @@ relatorio = detratores_df.groupby('categoria_problema').agg(
 ).reset_index()
 
 # Exportar os arquivos
-detratores_df.to_excel(r'C:\Users\Kosmos Soluções\OneDrive - Kosmos Construtora Ltda\Documentos\ProjectsUser\Gog\project\doc\result\detratores_classificados.xlsx', index=False)
-relatorio.to_excel(r'C:\Users\Kosmos Soluções\OneDrive - Kosmos Construtora Ltda\Documentos\ProjectsUser\Gog\project\doc\result\relatorio_impacto_semanal.xlsx', index=False)
+detratores_df.to_excel(r'\Gog\project\doc\result\detratores_classificados.xlsx', index=False)
+relatorio.to_excel(r'\Gog\project\doc\result\relatorio_impacto_semanal.xlsx', index=False)
 
 print("Relatórios gerados com sucesso!")
