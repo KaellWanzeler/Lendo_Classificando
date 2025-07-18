@@ -20,10 +20,10 @@ clientes_pedidos_estoque = pd.merge(clientes_pedidos, estoque_df, on='Produto', 
 # Filtrar produtos com estoque 0
 pedidos_travados = clientes_pedidos_estoque[clientes_pedidos_estoque['Estoque'] == 0].copy()
 
-# Selecionar colunas para exportação
-pedidos_travados_final = pedidos_travados[[
-    'Nome do Cliente', 'Telefone', 'E-mail', 'Pedido', 'Produto', 'Data do Pedido'
-]]
+# Agrupar produtos por cliente + pedido
+pedidos_travados_final = pedidos_travados.groupby(
+    ['Nome do Cliente', 'Telefone', 'E-mail', 'Pedido', 'Data do Pedido']
+)['Produto'].agg(lambda x: ' / '.join(sorted(set(x)))).reset_index()
 
 # Exportar para Excel
 pedidos_travados_final.to_excel(r'\Gog\Part II\pedidos_travados.xlsx', index=False)
