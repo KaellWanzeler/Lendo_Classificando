@@ -2,9 +2,9 @@
 import pandas as pd
 
 # Carregar os arquivos
-clientes_df = pd.read_excel('Base de Clientes.xlsx')
-estoque_df = pd.read_excel('Relatório Estoque.xlsx')
-pedidos_df = pd.read_excel('Base de dados - Detalhes dos pedidos.xlsx')
+clientes_df = pd.read_excel(r'\Gog\Part II\Base de Clientes.xlsx')
+estoque_df = pd.read_excel(r'\Gog\Part II\Relatório Estoque.xlsx')
+pedidos_df = pd.read_excel(r'\Gog\Part II\Base de dados - Detalhes dos pedidos.xlsx')
 
 # Renomear colunas para padronizar
 clientes_df.rename(columns={'Código do Pedido': 'Pedido'}, inplace=True)
@@ -26,6 +26,6 @@ pedidos_travados_final = pedidos_travados[[
 ]]
 
 # Exportar para Excel
-pedidos_travados_final.to_excel('pedidos_travados.xlsx', index=False)
+pedidos_travados_final.to_excel(r'\Gog\Part II\pedidos_travados.xlsx', index=False)
 
 print("Arquivo 'pedidos_travados.xlsx' gerado com sucesso.")
